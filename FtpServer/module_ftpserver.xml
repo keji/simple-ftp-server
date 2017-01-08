@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ftpserver" default="compile.module.ftpserver">
+  <dirname property="module.ftpserver.basedir" file="${ant.file.module_ftpserver}"/>
+  
+  <property name="module.jdk.home.ftpserver" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ftpserver" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ftpserver" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ftpserver" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="ftpserver.output.dir" value="${module.ftpserver.basedir}/out/production/FtpServer"/>
+  <property name="ftpserver.testoutput.dir" value="${module.ftpserver.basedir}/out/test/FtpServer"/>
+  
+  <path id="ftpserver.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ftpserver.module.production.classpath">
+    <path refid="${module.jdk.classpath.ftpserver}"/>
+  </path>
+  
+  <path id="ftpserver.runtime.production.module.classpath">
+    <pathelement location="${ftpserver.output.dir}"/>
+  </path>
+  
+  <path id="ftpserver.module.classpath">
+    <path refid="${module.jdk.classpath.ftpserver}"/>
+    <pathelement location="${ftpserver.output.dir}"/>
+  </path>
+  
+  <path id="ftpserver.runtime.module.classpath">
+    <pathelement location="${ftpserver.testoutput.dir}"/>
+    <pathelement location="${ftpserver.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ftpserver">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ftpserver">
+    <patternset refid="excluded.from.module.ftpserver"/>
+  </patternset>
+  
+  <path id="ftpserver.module.sourcepath">
+    <dirset dir="${module.ftpserver.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ftpserver" depends="compile.module.ftpserver.production,compile.module.ftpserver.tests" description="Compile module FtpServer"/>
+  
+  <target name="compile.module.ftpserver.production" depends="register.custom.compilers" description="Compile module FtpServer; production classes">
+    <mkdir dir="${ftpserver.output.dir}"/>
+    <javac2 destdir="${ftpserver.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ftpserver}/javac">
+      <compilerarg line="${compiler.args.ftpserver}"/>
+      <bootclasspath refid="ftpserver.module.bootclasspath"/>
+      <classpath refid="ftpserver.module.production.classpath"/>
+      <src refid="ftpserver.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ftpserver"/>
+    </javac2>
+    
+    <copy todir="${ftpserver.output.dir}">
+      <fileset dir="${module.ftpserver.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ftpserver.tests" depends="register.custom.compilers,compile.module.ftpserver.production" description="compile module FtpServer; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.ftpserver" description="cleanup module">
+    <delete dir="${ftpserver.output.dir}"/>
+    <delete dir="${ftpserver.testoutput.dir}"/>
+  </target>
+</project>

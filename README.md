@@ -1,2 +1,4 @@
 # simple-ftp-server
-simple ftp server use java
+JAVA implementation of simple ftp server
+
+java -jar -i 8080 FtpServer.jar
